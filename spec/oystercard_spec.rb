@@ -1,6 +1,7 @@
 require 'oystercard'
 
 describe OysterCard do
+let (:station) { double :station }
 
   describe '#balance' do
     it 'a new card should have a defualt balance of 0' do
@@ -29,9 +30,16 @@ describe OysterCard do
 
   describe '#touch_in' do
     it 'should set oystercard to in journey' do
-      subject.touch_in
+      subject.touch_in(station)
       expect(subject).to be_in_journey
     end
+
+    it 'should record the entry station' do
+      subject.instance_variable_set(:@balance, 10)
+      subject.touch_in(station)
+      expect(subject.entry_station).to eq station
+    end
+
   end
 
   describe '#touch_out' do
@@ -57,6 +65,13 @@ describe OysterCard do
     it 'should reduce balance by journey amount' do
       subject.instance_variable_set(:@balance, 10)
       expect { subject.touch_out }.to change{ subject.balance }.by(-1)
+    end
+
+    it 'should reset entry_station to nil' do
+      subject.instance_variable_set(:@balance, 10)
+      subject.instance_variable_set(:@entry_station, station)
+      subject.touch_out
+      expect(subject.entry_station).to eq nil
     end
 
   end
