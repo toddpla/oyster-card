@@ -4,10 +4,11 @@ class OysterCard
   DEFAULT_MIN_BALANCE = 1
 
 
-  attr_reader :balance, :entry_station
+  attr_reader :balance, :entry_station, :journey_history
 
   def initialize
     @balance = 0
+    @journey_history = []
   end
 
   def top_up(amount)
@@ -22,11 +23,19 @@ class OysterCard
 
   def touch_in(station)
     @entry_station = station
+    @journey_history << { 'Entry Station' => station }
   end
 
-  def touch_out(fare=1)
+  def touch_out(fare=1, station)
     deduct(fare)
     @entry_station = nil
+    @journey_history[-1]['Exit Station'] = station
+  end
+
+  def journey_history_list
+    return @journey_history.map do |journey|
+      "Entry Station: #{journey['Entry Station']}, Exit Station: #{journey['Exit Station']}"
+    end
   end
 
   private
