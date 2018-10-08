@@ -29,4 +29,25 @@ describe OysterCard do
     end
   end
 
+  describe '#in_journey?' do
+    it 'should default as false' do
+      expect(subject.in_journey?).to eq false
+    end
+  end
+
+  describe '#touch_in' do
+    it 'should set oystercard to in journey' do
+      subject.touch_in
+      expect(subject).to be_in_journey
+    end
+  end
+
+  describe '#touch_out' do
+    it 'should set oystercard to not in journey' do
+      # subject.instance_variable_set(:@in_journey, true)
+      subject.touch_out
+      expect(subject).not_to be_in_journey
+    end
+  end
+
 end
