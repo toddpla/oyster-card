@@ -8,4 +8,11 @@ describe OysterCard do
     end
   end
 
+  describe 'top_up' do
+    it "tops up the balance on the oyster card" do
+      subject.top_up(5)
+      expect(subject.balance).to eq 5
+    end
+  end
+
 end
