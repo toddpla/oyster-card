@@ -21,20 +21,6 @@ describe OysterCard do
     end
   end
 
-  describe '#deduct' do
-    it 'deducts the fare from the balance on the oystercard' do
-      subject.instance_variable_set(:@balance, 10)
-      subject.deduct(5)
-      expect(subject.balance).to eq 5
-    end
-
-    it 'raises an error if insufficient funds' do
-      min = OysterCard::DEFAULT_MIN_BALANCE
-      expect { subject.deduct(min + 1) }.to raise_error("Insufficient funds")
-    end
-
-  end
-
   describe '#in_journey?' do
     it 'should default as false' do
       expect(subject.in_journey?).to eq false
@@ -49,11 +35,30 @@ describe OysterCard do
   end
 
   describe '#touch_out' do
+
+    it 'deducts the fare from the balance on the oystercard' do
+      subject.instance_variable_set(:@balance, 10)
+      subject.touch_out(5)
+      expect(subject.balance).to eq 5
+    end
+
+    it 'raises an error if insufficient funds' do
+      min = OysterCard::DEFAULT_MIN_BALANCE
+      expect { subject.touch_out(min + 1) }.to raise_error("Insufficient funds")
+    end
+
+
     it 'should set oystercard to not in journey' do
-      # subject.instance_variable_set(:@in_journey, true)
+      subject.instance_variable_set(:@balance, 10)
       subject.touch_out
       expect(subject).not_to be_in_journey
     end
+
+    it 'should reduce balance by journey amount' do
+      subject.instance_variable_set(:@balance, 10)
+      expect { subject.touch_out }.to change{ subject.balance }.by(-1)
+    end
+
   end
 
 end
