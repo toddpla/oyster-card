@@ -13,6 +13,13 @@ describe OysterCard do
       subject.top_up(5)
       expect(subject.balance).to eq 5
     end
+
+    it "should raise error if exceeding maximum balance" do
+      max = OysterCard::DEFAULT_MAXIMUM_BALANCE
+      error_message = "Maximum balance (#{max}) exceeded"
+      expect { subject.top_up(max + 1) }.to raise_error(error_message)
+    end
+
   end
 
 end
